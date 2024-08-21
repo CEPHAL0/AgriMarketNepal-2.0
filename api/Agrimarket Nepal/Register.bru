@@ -1,0 +1,20 @@
+meta {
+  name: Register
+  type: http
+  seq: 6
+}
+
+post {
+  url: 127.0.0.1:8000/users/register
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "username":"Sharad Sharma",
+    "password":"Hello World",
+    "email":"xaradxarma@gmail.com",
+    "password_confirm":"Hello World"
+  }
+}

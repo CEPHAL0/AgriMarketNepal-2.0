@@ -1,0 +1,18 @@
+meta {
+  name: Login
+  type: http
+  seq: 5
+}
+
+post {
+  url: 127.0.0.1:8000/users/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email":"xaradxarma@gmail.com",
+    "password":"password"
+  }
+}

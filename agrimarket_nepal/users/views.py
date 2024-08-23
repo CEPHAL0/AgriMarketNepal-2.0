@@ -13,6 +13,19 @@ from .models import User
 from django.http import HttpResponse
 from rest_framework.views import APIView
 from agrimarket_nepal.response import BaseApiRenderer, APIResponse
+from users.forms import RegisterForm
+from django.views import View
+
+
+class RegisterView(View):
+    def get(self, request):
+        if request.method == "GET":
+            form = RegisterForm()
+            return render(request, "name.html", {"form": form})
+
+
+class AuthView:
+    pass
 
 
 class AuthList(APIView):
@@ -45,10 +58,25 @@ class Register(APIView):
 
     def post(self, request):
         serializer = RegisterSerializer(data=request.data)
-
-        if serializer.is_valid():
+        if not serializer.is_valid():
+            print(serializer.errors)
             return APIResponse(
-                data=serializer.validated_data,
-                status=200,
-                message="User Registered Successfully",
+                data=None,
+                status=400,
+                message=serializer.errors,
             )
+        data = serializer.validated_data
+
+        User.objects.create(
+            username=data["username"], email=data["email"], password=data["password"]
+        )
+
+
+class UserList(viewsets.ViewSet):
+    def list(self, request):
+        queryset = User.objects.all()
+        serializer = UserSerializer(queryset, many=True)
+        print(serializer)
+        return APIResponse(
+            data=serializer.data, status=200, message="Users Retrieved Successfully"
+        )

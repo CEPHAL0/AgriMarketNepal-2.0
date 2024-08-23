@@ -7,9 +7,6 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ["username", "email", "role", "password", "image"]
 
-    def __str__(self):
-        return self.username
-
 
 class AuthSerializer(serializers.Serializer):
     email = serializers.EmailField()

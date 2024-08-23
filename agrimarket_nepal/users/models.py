@@ -2,14 +2,43 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.models import UserManager
+from django.contrib.auth.models import BaseUserManager
+
+
+class RoleTypes(models.TextChoices):
+    Farmer = "Farmer", _("Farmer")
+    Consumer = "Consumer", _("Consumer")
+    Admin = "Admin", _("Admin")
+
+
+class MyUserManager(BaseUserManager):
+    def create_user(
+        self, email, username, password=None, role=RoleTypes.Consumer, **extra_fields
+    ):
+        if not email:
+            raise ValueError("Users must have email address")
+
+        user = self.model(
+            email=self.normalize_email(email),
+            username=username,
+            role=role,
+            **extra_fields,
+        )
+
+        user.set_password(password)
+        user.save()
+        return user
+
+    def create_superuser(self, email, username, password=None, **extra_fields):
+        extra_fields.setdefault("role", RoleTypes.Admin)
+        extra_fields.setdefault("is_staff", True)
+        extra_fields.setdefault("is_superuser", True)
+        user = self.create_user(email, username, password, **extra_fields)
+        user.save()
+        return user
 
 
 class User(AbstractUser):
-    class RoleTypes(models.TextChoices):
-        Farmer = "Farmer", _("Farmer")
-        Consumer = "Consumer", _("Consumer")
-        Admin = "Admin", _("Admin")
-
     class Meta:
         db_table = "users"
 
@@ -22,8 +51,11 @@ class User(AbstractUser):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
+    objects = MyUserManager()
+
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = []
+    EMAIL_FIELD = "email"
+    REQUIRED_FIELDS = ["username", "password"]
 
     def __str__(self):
         return self.username

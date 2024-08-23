@@ -2,7 +2,8 @@ from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import get_user_model
 from rest_framework import routers
-
+from django.conf.urls.static import static
+from django.conf import settings
 
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()

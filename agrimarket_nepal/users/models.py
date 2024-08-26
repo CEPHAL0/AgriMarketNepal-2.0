@@ -18,6 +18,8 @@ class MyUserManager(BaseUserManager):
         if not email:
             raise ValueError("Users must have email address")
 
+        extra_fields.setdefault("image", "default.jpg")
+
         user = self.model(
             email=self.normalize_email(email),
             username=username,

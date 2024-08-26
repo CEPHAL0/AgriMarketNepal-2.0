@@ -7,7 +7,7 @@ from rest_framework.request import Request
 from .serializers import UserSerializer, AuthSerializer, RegisterSerializer
 from django.contrib.auth.decorators import login_not_required
 from django.contrib.auth import authenticate
-from django.http import Http404, response
+from django.http import Http404, HttpResponseRedirect, response
 from rest_framework import viewsets
 from rest_framework.response import Response
 from .models import User
@@ -16,12 +16,13 @@ from rest_framework.views import APIView
 from agrimarket_nepal.response import BaseApiRenderer, APIResponse
 from users.forms import RegisterForm
 from django.views import View
+from django.contrib import messages
 
 
 class RegisterView(View):
     def get(self, request):
         form = RegisterForm()
-        return render(request, "users/name.html", {"form": form})
+        return render(request, "auth/register.html", {"form": form})
 
     def post(self, request):
         data = request.POST
@@ -30,19 +31,21 @@ class RegisterView(View):
         if form.is_valid():
             first_name = form.cleaned_data["first_name"]
             last_name = form.cleaned_data["last_name"]
-            username = form.cleaned_data["password"]
+            username = form.cleaned_data["username"]
             email = form.cleaned_data["email"]
             password = form.cleaned_data["password"]
 
-            print(
-                {
-                    "first_name": first_name,
-                    "last_name": last_name,
-                    "username": username,
-                    "email": email,
-                    "password": password,
-                }
+            user = User.objects.create_user(
+                username=username,
+                email=email,
+                password=password,
+                first_name=first_name,
+                last_name=last_name,
             )
+
+            messages.success(request, "User successfully registered")
+
+            return redirect("users:register")
         else:
             ctx = {"form": form}
             return render(request, "users/name.html", ctx)

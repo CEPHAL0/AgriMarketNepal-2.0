@@ -10,6 +10,6 @@ api_urlpatterns = [
 ]
 
 urlpatterns = [
-    path("register", RegisterView.as_view()),
+    path("register", RegisterView.as_view(), name="register"),
     path("create", RegisterView.as_view(), name="create"),
 ]

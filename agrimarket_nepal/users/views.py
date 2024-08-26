@@ -1,4 +1,5 @@
-from django.shortcuts import render
+from http.client import HTTPMessage, HTTPResponse
+from django.shortcuts import redirect, render
 from rest_framework import serializers
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -6,7 +7,7 @@ from rest_framework.request import Request
 from .serializers import UserSerializer, AuthSerializer, RegisterSerializer
 from django.contrib.auth.decorators import login_not_required
 from django.contrib.auth import authenticate
-from django.http import Http404
+from django.http import Http404, response
 from rest_framework import viewsets
 from rest_framework.response import Response
 from .models import User
@@ -19,9 +20,38 @@ from django.views import View
 
 class RegisterView(View):
     def get(self, request):
-        if request.method == "GET":
-            form = RegisterForm()
-            return render(request, "name.html", {"form": form})
+        form = RegisterForm()
+        return render(request, "users/name.html", {"form": form})
+
+    def post(self, request):
+        data = request.POST
+        form = RegisterForm(data)
+
+        if form.is_valid():
+            first_name = form.cleaned_data["first_name"]
+            last_name = form.cleaned_data["last_name"]
+            username = form.cleaned_data["password"]
+            email = form.cleaned_data["email"]
+            password = form.cleaned_data["password"]
+
+            print(
+                {
+                    "first_name": first_name,
+                    "last_name": last_name,
+                    "username": username,
+                    "email": email,
+                    "password": password,
+                }
+            )
+        else:
+            ctx = {"form": form}
+            return render(request, "users/name.html", ctx)
+
+
+class RegisterResponseView(View):
+    def get(self, request):
+        print("Hello world")
+        return response({"message": "Hello World"})
 
 
 class AuthView:

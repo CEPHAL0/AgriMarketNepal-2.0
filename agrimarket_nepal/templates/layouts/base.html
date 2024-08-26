@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+{% load static %}
+{% load widget_tweaks %}
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+        <title>{% block title %}AgriMarket Nepal {% endblock%}</title>
+    </head>
+
+    <body>
+            {% block content %}
+            {%  endblock %}
+            
+            {% block scripts %}
+            {% endblock %}
+    </body>
+</html>

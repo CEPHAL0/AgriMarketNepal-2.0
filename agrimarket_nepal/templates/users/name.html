@@ -1,0 +1,63 @@
+{% extends "layouts/base.html" %}
+{% load widget_tweaks %}
+
+{%block title %}
+    Register
+{%endblock%}
+
+{% block content %}
+    <div>
+        <form action="{% url 'users:create' %}" method="POST">
+            {% csrf_token %}
+            <div class="flex flex-col w-[40vw] gap-4" >
+                <label for="id_first_name">{{form.first_name.label}}</label>
+
+                {% render_field form.first_name class+="border border-black" %}
+
+                {% for error in form.first_name.errors %}
+                    <span class="text-red-400 font-bold">{{error}}</span>
+                {% endfor %}
+
+                <label for="id_last_name">{{ form.last_name.label }}</label>
+                {% render_field form.last_name class+="border border-black" %}
+
+                {% for error in form.last_name.errors %}
+                    <span class="text-red-400 font-bold">{{error}}</span>
+                {% endfor %}
+
+                <label for="id_username">{{ form.username.label }}</label>
+
+                {% render_field form.username class+="border border-black" %}
+
+                {% for error in form.username.errors %}
+                    <span class="text-red-400 font-bold">{{error}}</span>
+                {% endfor %}
+
+
+                <label for="id_email">{{ form.email.label }}</label>
+                {% render_field form.email class+="border border-black" %}
+
+                {% for error in form.email.errors %}
+                    <span class="text-red-400 font-bold">{{error}}</span>
+                {% endfor %}
+
+                <label for="id_password">{{ form.password.label }}</label>
+
+                {% render_field form.password class+="border border-black" %}
+
+                {% for error in form.password.errors %}
+                    <span class="text-red-400 font-bold">{{error}}</span>
+                {% endfor %}
+
+                <button type="submit" class="border border-black p-2 bg-black text-white">
+                    Register
+                </button>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+    </script>
+{% endblock %}

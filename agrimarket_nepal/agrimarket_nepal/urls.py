@@ -12,7 +12,7 @@ router = routers.DefaultRouter()
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
-    path("users/", include("users.urls")),
+    path("users/", include("users.urls", namespace="users")),
     path("provinces/", include("provinces.urls")),
     path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
     path("admin", admin.site.urls),

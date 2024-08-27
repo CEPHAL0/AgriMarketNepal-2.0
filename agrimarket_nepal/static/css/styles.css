@@ -578,6 +578,10 @@ video {
   gap: 1rem;
 }
 
+.rounded-sm {
+  border-radius: 0.125rem;
+}
+
 .border {
   border-width: 1px;
 }
@@ -594,6 +598,18 @@ video {
 
 .p-2 {
   padding: 0.5rem;
+}
+
+.p-\[20rem\] {
+  padding: 20rem;
+}
+
+.p-\[2rem\] {
+  padding: 2rem;
+}
+
+.p-\[1rem\] {
+  padding: 1rem;
 }
 
 .font-bold {

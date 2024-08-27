@@ -1,20 +1,13 @@
-from http.client import HTTPMessage, HTTPResponse
 from django.shortcuts import redirect, render
-from rest_framework import serializers
-from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from rest_framework.request import Request
 from .serializers import UserSerializer, AuthSerializer, RegisterSerializer
-from django.contrib.auth.decorators import login_not_required
 from django.contrib.auth import authenticate
-from django.http import Http404, HttpResponseRedirect, response
+from django.http import HttpResponse, response
 from rest_framework import viewsets
-from rest_framework.response import Response
 from .models import User
-from django.http import HttpResponse
 from rest_framework.views import APIView
-from agrimarket_nepal.response import BaseApiRenderer, APIResponse
-from users.forms import RegisterForm
+from agrimarket_nepal.response import APIResponse
+from users.forms import RegisterForm, LoginForm
 from django.views import View
 from django.contrib import messages
 
@@ -49,6 +42,35 @@ class RegisterView(View):
         else:
             ctx = {"form": form}
             return render(request, "users/name.html", ctx)
+
+
+class LoginView(View):
+    def get(self, request):
+        form = LoginForm()
+        return render(request, "auth/login.html", {"form": form})
+
+    def post(self, request):
+        data = request.POST
+        form = LoginForm(data)
+
+        try:
+            if form.is_valid():
+                email = form.cleaned_data["email"]
+                password = form.cleaned_data["password"]
+
+                print(f"{email}, {password}")
+
+                user = authenticate(username=email, password=password)
+
+                if user is None:
+                    messages.success(request, "Invalid Credentials")
+                    raise Exception("Invalid Credentials")
+            else:
+                raise Exception("Form Invalid")
+
+        except Exception as error:
+            ctx = {"form": form}
+            return render(request, "auth/login.html", ctx)
 
 
 class RegisterResponseView(View):

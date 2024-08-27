@@ -1,5 +1,12 @@
 from django.urls import path
-from .views import AuthList, Register, RegisterResponseView, UserList, RegisterView
+from .views import (
+    AuthList,
+    LoginView,
+    Register,
+    RegisterResponseView,
+    UserList,
+    RegisterView,
+)
 from rest_framework.routers import DefaultRouter
 
 app_name = "users"
@@ -12,4 +19,6 @@ api_urlpatterns = [
 urlpatterns = [
     path("register", RegisterView.as_view(), name="register"),
     path("create", RegisterView.as_view(), name="create"),
+    path("login", LoginView.as_view(), name="login"),
+    path("authenticate", LoginView.as_view(), name="authenticate"),
 ]

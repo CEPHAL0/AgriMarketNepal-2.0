@@ -1,0 +1,91 @@
+{% extends "layouts/base.html" %}
+{% load widget_tweaks %}
+
+{% block title %}
+Create Consumable
+{% endblock %}
+
+{% block content %}
+
+<form action="{% url 'consumables:admin:create' %}" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+
+    <label for="id_name">{{form.name.label}}</label>
+    {{ form.name | add_class:"border border-black" }}
+
+    {% for error in form.name.errors %}
+    <span>{{error}}</span>
+    {% endfor %}
+
+    <label for="id_type">{{form.type.label}}</label>
+    {{ form.type | add_class:"border border-black" }}
+
+    {% for error in form.type.errors %}
+    <span>{{error}}</span>
+    {% endfor %}
+
+    <label for="id_calories">{{form.calories.label}}</label>
+    {{ form.calories | add_class:"border border-black" }}
+
+    {% for error in form.calories.errors %}
+    <span>{{error}}</span>
+    {% endfor %}
+
+    <label for="id_seasonal">{{form.seasonal.label}}</label>
+    {{ form.seasonal | add_class:"border border-black" }}
+
+    {% for error in form.seasonal.errors %}
+    <span>{{error}}</span>
+    {% endfor %}
+
+
+    <label for="id_image">{{form.image.label}}</label>
+    
+    {{ form.image | add_class:"hidden border border-black" }}
+    <div class="h-32 w-32 bg-gray-200" id="uploadImage" type="button">
+        <img id="preview" class="h-full w-full object-cover object-center"/>
+    </div>
+
+    {% for error in form.image.errors %}
+    <span>{{error}}</span>
+    {% endfor %}
+    <button type="submit" class="bg-black text-white p-[1rem] rounded-sm">Create</button>
+
+</form>
+
+{% endblock %}
+
+
+{% block scripts %}
+<script>
+        const inpFile = document.getElementById('id_image');
+        const previewImage = document.getElementById('preview');
+        const uploadText = document.getElementById('upload-text');
+        const uploadImageContainer = document.getElementById('uploadImage')
+
+        uploadImageContainer.addEventListener('click', function(){
+            inpFile.click();
+        })
+
+        inpFile.addEventListener('change', function() {
+            const file = this.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+
+                reader.addEventListener('load', function() {
+                    previewImage.setAttribute('src', this.result);
+                    previewImage.classList.remove('hidden');
+                    uploadText.classList.add('hidden');
+                });
+
+                reader.readAsDataURL(file);
+            } else {
+                previewImage.classList.add('hidden');
+                previewImage.setAttribute('src', '');
+                uploadText.classList.remove('hidden');
+            }
+        });
+</script>
+{% endblock %}

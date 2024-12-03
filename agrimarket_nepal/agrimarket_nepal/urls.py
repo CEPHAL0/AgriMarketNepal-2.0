@@ -13,7 +13,6 @@ router = routers.DefaultRouter()
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
     path("users/", include("users.urls", namespace="users")),
-    path("provinces/", include("provinces.urls")),
-    path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
+    path("", include("consumables.urls", namespace="consumables")),
     path("admin", admin.site.urls),
 ]

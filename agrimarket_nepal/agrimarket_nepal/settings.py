@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     "widget_tweaks",
     "rest_framework",
     "users",
-    "provinces",
+    "consumables",
 ]
 
 MIDDLEWARE = [
@@ -64,7 +64,6 @@ REST_FRAMEWORK = {
         # 'rest_framework.permissions.DjangoModelPermissions'
     ],
     "DEFAULT_RENDERER_CLASSES": [
-        "agrimarket_nepal.response.BaseApiRenderer",
         "rest_framework.renderers.BrowsableAPIRenderer",
     ],
     "NON_FIELD_ERRORS_KEY": "validation_errors",
@@ -135,6 +134,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = "static/"
+
 # STATIC_ROOT = os.path.join(BASE_DIR, "static")
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 # Default primary key field type

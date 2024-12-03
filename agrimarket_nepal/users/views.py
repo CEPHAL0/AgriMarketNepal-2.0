@@ -1,12 +1,10 @@
 from django.shortcuts import redirect, render
+from django.urls import reverse
 from rest_framework.response import Response
 from .serializers import UserSerializer, AuthSerializer, RegisterSerializer
-from django.contrib.auth import authenticate
+from django.contrib.auth import authenticate, login, logout
 from django.http import HttpResponse, response
-from rest_framework import viewsets
-from .models import User
-from rest_framework.views import APIView
-from agrimarket_nepal.response import APIResponse
+from .models import RoleTypes, User
 from users.forms import RegisterForm, LoginForm
 from django.views import View
 from django.contrib import messages
@@ -58,13 +56,15 @@ class LoginView(View):
                 email = form.cleaned_data["email"]
                 password = form.cleaned_data["password"]
 
-                print(f"{email}, {password}")
-
                 user = authenticate(username=email, password=password)
 
                 if user is None:
-                    messages.success(request, "Invalid Credentials")
+                    messages.error(request, "Invalid Credentials")
                     raise Exception("Invalid Credentials")
+                else:
+                    login(request, user)
+                    if user.role == "Admin":
+                        return redirect("consumables:admin:home")
             else:
                 raise Exception("Form Invalid")
 
@@ -73,65 +73,23 @@ class LoginView(View):
             return render(request, "auth/login.html", ctx)
 
 
+class AdminHomeView(View):
+    def get(self, request):
+        return HttpResponse({"message": "Hello World From Admin"})
+
+
+class FarmerView(View):
+    def get(self, request):
+        return {"message": "Hello World From Farmer"}
+
+
+class LogoutView(View):
+    def post(self, request):
+        logout(request)
+        return redirect(reverse("users:login"))
+
+
 class RegisterResponseView(View):
     def get(self, request):
         print("Hello world")
         return response({"message": "Hello World"})
-
-
-class AuthView:
-    pass
-
-
-class AuthList(APIView):
-    """
-    Auth Classes
-    """
-
-    def post(self, request, format=None):
-        serializer = AuthSerializer(data=request.data)
-        if not (serializer.is_valid()):
-            return Response(serializer.errors, 400)
-
-        validated_data = serializer.validated_data
-        email = validated_data["email"]
-        password = validated_data["password"]
-        user = authenticate(username=email, password=password)
-
-        if user is not None:
-            return APIResponse(data={}, status=200, message="User Found")
-        else:
-            return APIResponse(data=None, status=404, message="User not found")
-
-
-class Register(APIView):
-    """
-    Register a new user
-    """
-
-    #    renderer_classes = [BaseApiRenderer]
-
-    def post(self, request):
-        serializer = RegisterSerializer(data=request.data)
-        if not serializer.is_valid():
-            print(serializer.errors)
-            return APIResponse(
-                data=None,
-                status=400,
-                message=serializer.errors,
-            )
-        data = serializer.validated_data
-
-        User.objects.create(
-            username=data["username"], email=data["email"], password=data["password"]
-        )
-
-
-class UserList(viewsets.ViewSet):
-    def list(self, request):
-        queryset = User.objects.all()
-        serializer = UserSerializer(queryset, many=True)
-        print(serializer)
-        return APIResponse(
-            data=serializer.data, status=200, message="Users Retrieved Successfully"
-        )

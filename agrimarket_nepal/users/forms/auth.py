@@ -13,12 +13,12 @@ class RegisterForm(ModelForm):
         fields = ["first_name", "last_name", "username", "email", "password"]
 
     def clean_password(self):
-        password = self.cleaned_data.get("password")
         try:
+            password = self.cleaned_data.get("password")
             password_validation.validate_password(password=password, user=self.instance)
+            return password
         except forms.ValidationError as error:
             self.add_error("password", error)
-        return password
 
 
 class LoginForm(Form):

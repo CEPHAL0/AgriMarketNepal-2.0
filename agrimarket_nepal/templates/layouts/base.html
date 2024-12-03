@@ -10,17 +10,36 @@
     </head>
 
     <body>
-        {% if messages %}
-            <ul class="messages">
-                {% for message in messages %}
-                    <li>{{message}}</li>
-                {% endfor %}
-            </ul>
-        {% endif %}
-        {% block content %}
-            {%  endblock %}
-            
-            {% block scripts %}
-            {% endblock %}
+        <div class="p-4 flex flex-col w-screen">
+            <nav class="sticky top-2 p-4 h-18 flex justify-between gap-2 mb-2 bg-black rounded-[4rem]">
+               <p class="text-white font-bold">AGRIMARKET </p> 
+
+                {% if user.is_authenticated %}
+                    <form action="{% url "users:logout" %}" method="POST">
+                        {% csrf_token %}
+                        <button class="text-red-500 font-semibold text-sm" type="submit">Logout</button>
+                    </form>
+                {% else %}
+                <button class="text-green-500 font-semibold text-sm"><a href="{% url "users:login" %}">Login</a></button>
+                {% endif %}
+            </nav>
+
+            <div>
+                {% if messages %}
+                    <ul class="messages">
+                        {% for message in messages %}
+                            <li class="text-red-400 font-bold">{{message}}</li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+                
+                {% block content %}
+                {%  endblock %}
+                    
+                {% block scripts %}
+                {% endblock %}
+            </div>
+
+        </div>
     </body>
 </html>

@@ -1,0 +1,31 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% block title %}
+Consumables
+{% endblock %}
+
+{% block content %}
+    <div class="flex flex-wrap gap-10 items-center justify-center mt-10">
+        <div class="border border-black w-64">
+        <img src="{%static  %}" alt="{{consumable.name}}" class="h-52 w-full
+                object-cover object-center">
+            <p class="text-2xl font-bold my-2 pl-2">{{consumable.name}}</p>
+            <div class="flex gap-2 justify-start pl-2">
+                <button>Edit</button>
+                <button>Delete</button>
+            </div>
+        </div>
+        {% for consumable in consumables %}
+            <div class="border border-black w-64">
+                <img src="{{consumable.image.url}}" alt="{{consumable.name}}" class="h-52 w-full
+                    object-cover object-center">
+                <p class="text-2xl font-bold my-2 pl-2">{{consumable.name}}</p>
+                <div class="flex gap-2 justify-start pl-2">
+                    <button>Edit</button>
+                    <button>Delete</button>
+                </div>
+            </div>
+        {%  endfor %}
+    </div>
+{% endblock %}
